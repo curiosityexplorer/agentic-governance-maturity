@@ -1,0 +1,646 @@
+%%
+%% MDPI AI Journal - LaTeX Manuscript Template
+%% Special Issue: The Use of Artificial Intelligence in Business
+%%
+%% To compile: pdflatex -> bibtex -> pdflatex -> pdflatex
+%%
+
+\documentclass[ai,article,submit,pdftex,moreauthors]{Definitions/mdpi}
+
+% If mdpi.cls is not available, uncomment below for standalone compilation:
+% \documentclass[11pt,a4paper]{article}
+% \usepackage[margin=1in]{geometry}
+% \usepackage{graphicx,booktabs,multirow,amsmath,hyperref,xcolor,longtable,caption}
+% \newcommand{\orcidicon}{}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{xcolor}
+
+%% ============================================================
+%% TITLE
+%% ============================================================
+
+\Title{Governing the Agentic Enterprise: A Governance Maturity Model for Managing AI Agent Sprawl in Business Operations}
+
+\TitleCitation{Governing the Agentic Enterprise: A Governance Maturity Model for Managing AI Agent Sprawl in Business Operations}
+
+\Author{Vivek Acharya}
+
+\AuthorNames{Vivek Acharya}
+
+\AuthorCitation{Acharya, V.}
+
+\address{%
+Independent Researcher, Boston, MA, USA; vacharya@bu.edu}
+
+\corres{Correspondence: vacharya@bu.edu}
+
+\abstract{
+The rapid adoption of agentic AI in enterprise business operations---autonomous systems capable of planning, reasoning, and executing multi-step workflows---has created an urgent governance crisis. Organizations face uncontrolled agent sprawl: the proliferation of redundant, ungoverned, and conflicting AI agents across business functions. Industry surveys report that only 21\% of enterprises have mature governance models for autonomous agents, while 40\% of agentic AI projects are projected to fail by 2027 due to inadequate governance and risk controls. Despite growing acknowledgment of this challenge, academic literature lacks a formal, empirically validated governance maturity model connecting governance capability to measurable business outcomes. This paper introduces the Agentic AI Governance Maturity Model (AAGMM), a five-level framework spanning 12 governance domains, grounded in NIST AI RMF and ISO/IEC 42001 standards. We additionally propose a novel taxonomy of agent sprawl patterns---functional duplication, shadow agents, orphaned agents, permission creep, and unmonitored delegation chains---each linked to quantifiable business cost models. The framework is validated through 750 simulation runs across five enterprise scenarios and five governance maturity levels, measuring business outcomes including cost containment, risk incident rates, operational efficiency, and decision quality. Results demonstrate statistically significant differences ($p < 0.001$, large effect sizes $d > 2.0$) between all governance maturity levels, with Level~4--5 organizations achieving 94.3\% lower sprawl indices, 96.4\% fewer risk incidents, and 32.6\% higher effective task completion rates compared to Level~1. The AAGMM provides practitioners with an actionable roadmap for governing autonomous AI agents while maximizing business returns.
+}
+
+\keyword{agentic AI; governance maturity model; agent sprawl; enterprise AI governance; NIST AI RMF; ISO/IEC 42001; multi-agent systems; AI-driven business strategy; autonomous agents; AI risk management}
+
+
+\begin{document}
+
+%% ============================================================
+%% 1. INTRODUCTION
+%% ============================================================
+\section{Introduction}\label{sec:introduction}
+
+The emergence of agentic artificial intelligence (AI) represents a paradigm shift in enterprise technology. Unlike traditional AI systems that respond to queries or classify inputs, agentic AI systems autonomously plan multi-step strategies, select and invoke tools, and execute complex business workflows with minimal human intervention~\cite{wang2024survey,acharya2025agentic}. These systems have rapidly moved beyond experimentation: by 2025, 79\% of organizations reported some level of agentic AI adoption, with the market projected to grow from \$8.5~billion in 2026 to \$45~billion by 2030~\cite{deloitte2026state,wef2026agentic}.
+
+This adoption trajectory has generated immense business value. Google Cloud's 2025 ROI Report documented that 74\% of executives deploying AI agents achieved return on investment within the first year, with 39\% reporting doubled productivity in specific workflows~\cite{googlecloud2025roi}. Organizations across financial services, healthcare, retail, and manufacturing are deploying autonomous agents for customer service, fraud detection, supply chain optimization, and operational decision-making~\cite{deloitte2025emerging,kpmg2026q4pulse}.
+
+However, this rapid adoption has simultaneously created a governance crisis that threatens to undermine the very value it generates. Three converging problems define this crisis:
+
+\textbf{First, agent sprawl.} As low-code and no-code platforms make agent creation accessible to anyone in the organization, enterprises face the uncontrolled proliferation of redundant, fragmented, and ungoverned agents across teams and functions~\cite{googlecloud2026blueprint}. McKinsey identifies this as a risk analogous to the early days of robotic process automation: agents multiply across teams, duplicate efforts, and operate without oversight~\cite{mckinsey2025seizing}. Google Cloud describes this as ``agent sprawl''---a costly and uncontrolled proliferation of siloed, insecure, and duplicative AI agents that paradoxically undermines enterprise-wide ROI~\cite{googlecloud2026blueprint2}.
+
+\textbf{Second, the governance gap.} Despite 74\% of companies planning agentic AI deployments, only 21\% of leaders surveyed have a mature governance model for autonomous agents~\cite{deloitte2026state}. Gartner projects that 40\% of agentic AI projects will fail by 2027 due to escalating costs, unclear business value, and inadequate risk controls~\cite{arcade2025trends}. The disconnect between adoption velocity and governance readiness is striking: 42\% of organizations report still developing their agentic strategy roadmap, with 35\% having no formal strategy at all~\cite{deloitte2025emerging}.
+
+\textbf{Third, the ROI measurement vacuum.} While industry reports document impressive returns, they notably lack frameworks for how governance contributes to or detracts from these returns. Google Cloud's comprehensive ROI report, based on 3,466 executives, contains no discussion of agent governance models---how agents should be monitored, overridden, or audited~\cite{aigl2025roi}. Traditional ROI models are too narrow for agentic AI, focusing solely on direct cost savings while overlooking governance-dependent outcomes like risk reduction, compliance assurance, and portfolio optimization~\cite{moveworks2025roi}.
+
+Academic research has begun addressing individual facets of this problem. Recent work includes the Enterprise Agentic Mesh (EAM) architecture for network-layer governance~\cite{gupta2025eam}, the Governance-as-a-Service (GaaS) framework for runtime compliance filtering~\cite{fernandez2025gaas}, comprehensive TRiSM reviews cataloging trust, risk, and security challenges~\cite{ray2025trism}, and multi-expert analyses of agentic system implications~\cite{crick2025agents}. However, none of these works provide a holistic governance maturity model that (a)~defines progressive capability levels from ad-hoc to optimized governance, (b)~maps specific governance controls to business outcome metrics, and (c)~empirically validates the relationship between governance maturity and business value realization.
+
+This paper addresses this gap by introducing the Agentic AI Governance Maturity Model (AAGMM). Our contributions are fourfold:
+
+\begin{itemize}
+\item[\textbf{C1.}] The AAGMM framework: a five-level governance maturity model (Ad-hoc, Reactive, Defined, Managed, Optimized) spanning 12 governance domains, grounded in NIST AI RMF 1.0~\cite{nist2023rmf} and ISO/IEC 42001~\cite{iso42001}.
+\item[\textbf{C2.}] A governance-to-ROI mapping that formally connects governance maturity levels to four measurable business outcome dimensions: cost containment, risk reduction, operational efficiency, and decision quality.
+\item[\textbf{C3.}] A novel taxonomy of agent sprawl patterns---functional duplication, shadow agents, orphaned agents, permission creep, and unmonitored delegation chains---each linked to quantifiable business cost models.
+\item[\textbf{C4.}] Experimental validation through 750 multi-agent simulation runs across five enterprise scenarios, demonstrating statistically significant correlations between governance maturity and business outcomes ($p < 0.001$ for all pairwise comparisons).
+\end{itemize}
+
+The remainder of this paper is organized as follows. Section~\ref{sec:related} reviews related work. Section~\ref{sec:taxonomy} presents the agent sprawl taxonomy. Section~\ref{sec:framework} details the AAGMM framework and governance-to-ROI mapping. Section~\ref{sec:experimental} describes experimental design. Section~\ref{sec:results} presents results. Section~\ref{sec:discussion} discusses implications and limitations. Section~\ref{sec:conclusion} concludes.
+
+
+%% ============================================================
+%% 2. RELATED WORK
+%% ============================================================
+\section{Related Work}\label{sec:related}
+
+\subsection{Agentic AI in Enterprise Business Operations}\label{sec:related-agentic}
+
+Agentic AI represents a fundamental evolution from generative AI. While generative AI excels at producing content and answering queries, agentic AI systems combine large language models (LLMs) with tool access, memory, and planning capabilities to autonomously pursue complex goals~\cite{wang2024survey,acharya2025agentic}. The 2025 MIT Sloan Management Review and BCG study, surveying 2,102 respondents across 21 industries, found that agentic AI complicates traditional management boundaries: these systems are not just tools to be operated but actors that plan, learn, and adapt~\cite{mitsloan2025emerging}.
+
+Enterprise adoption has accelerated dramatically. Deloitte's State of AI in the Enterprise 2026 report, based on 3,235 global leaders, documents that agentic AI use cases are expanding rapidly across customer support, supply chain management, R\&D, knowledge management, and cybersecurity~\cite{deloitte2026state}. KPMG's Q4 AI Pulse Survey reported that 67\% of business leaders will maintain AI spending even during a recession, with \$124~million projected per organization in the coming year~\cite{kpmg2026q4pulse}. The economic stakes are significant: agentic AI systems are projected to add \$2.6--4.4 trillion annually to global GDP by 2030~\cite{arcade2025trends}.
+
+\subsection{AI Governance Frameworks}\label{sec:related-governance}
+
+The NIST AI Risk Management Framework (AI RMF 1.0) provides the most widely referenced governance structure, organized around four functions: Govern, Map, Measure, and Manage~\cite{nist2023rmf}. The Generative AI Profile (NIST AI 600-1) extends this specifically to generative AI risks~\cite{nist2024genai}. ISO/IEC 42001 establishes AI management system requirements, providing a certifiable standard for organizational AI governance~\cite{iso42001}. The EU AI Act introduces risk-tiered regulatory obligations with specific requirements for high-risk AI systems~\cite{euaiact2024}.
+
+However, these frameworks were designed for traditional AI deployments---not for environments where dozens or hundreds of autonomous agents operate simultaneously, delegate tasks to one another, and make decisions without human oversight. The gap between static governance frameworks and the dynamic, autonomous nature of agentic AI remains largely unaddressed in standards literature.
+
+\subsection{Maturity Models in Technology Governance}\label{sec:related-maturity}
+
+Maturity models have a strong precedent in technology governance. The Capability Maturity Model Integration (CMMI) defines five levels of process maturity (Initial, Managed, Defined, Quantitatively Managed, Optimizing) and has been widely adopted across software engineering~\cite{cmmi2018}. COBIT provides an IT governance maturity framework aligned with enterprise objectives~\cite{cobit2019}. More recently, AI-specific maturity models have been proposed: Gartner's AI Maturity Model, Microsoft's AI Maturity Framework, and various academic proposals~\cite{gartner2024aimaturity,microsoft2024aimaturity}. However, none of these specifically address the unique challenges of governing autonomous multi-agent AI systems in enterprise settings.
+
+\subsection{Agent Governance and Multi-Agent Systems}\label{sec:related-agent}
+
+Recent academic work has begun addressing agent-specific governance. The Enterprise Agentic Mesh (EAM) proposed a cognitive infrastructure layer with a Semantic Control Plane, Governance Sidecar, and distributed ledger for agent interactions~\cite{gupta2025eam}. The Governance-as-a-Service (GaaS) framework introduced a modular runtime proxy that filters agent actions based on programmable rules and assigns trust scores~\cite{fernandez2025gaas}. The TRiSM review systematically cataloged trust, risk, and security challenges across explainability, model operations, security, and privacy pillars~\cite{ray2025trism}.
+
+In workflow orchestration, research on Autonomous Manager Agents formalized multi-agent management as a Partially Observable Stochastic Game (POSG) and identified governance-by-design as one of four foundational challenges~\cite{chen2025manageragent}. The LOKA Protocol proposed decentralized governance with identity management and consensus mechanisms~\cite{ranjan2025loka}. OpenAI's published practices for governing agentic AI systems outlined principles including monitoring, authorization, and human-in-the-loop controls~\cite{openai2025practices}.
+
+Despite this growing body of work, a critical gap remains: no existing framework provides a prescriptive, level-based maturity model that (a)~maps governance capabilities to measurable business outcomes, (b)~defines actionable progression paths between levels, and (c)~empirically validates the governance--business-value relationship. The AAGMM fills this gap.
+
+
+%% ============================================================
+%% 3. AGENT SPRAWL TAXONOMY
+%% ============================================================
+\section{Agent Sprawl Taxonomy}\label{sec:taxonomy}
+
+Before presenting the governance maturity model, we formalize the problem it addresses. Agent sprawl---the uncontrolled proliferation of AI agents across an enterprise---manifests in five distinct patterns. Each pattern carries specific business costs and governance implications.
+
+\subsection{Taxonomy of Sprawl Patterns}\label{sec:taxonomy-patterns}
+
+Table~\ref{tab:sprawl-taxonomy} presents the five sprawl patterns, their definitions, and associated business impacts.
+
+\begin{table}[htbp]
+\caption{Agent Sprawl Taxonomy: Patterns, Definitions, and Business Impact.}\label{tab:sprawl-taxonomy}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l X X}
+\toprule
+\textbf{ID} & \textbf{Pattern} & \textbf{Definition} & \textbf{Business Impact} \\
+\midrule
+SP-01 & Functional Duplication & Multiple agents performing identical or substantially overlapping tasks across different teams or departments & Wasted compute/API costs (2--5$\times$), inconsistent outputs, conflicting actions on shared resources \\
+\addlinespace
+SP-02 & Shadow Agents & Agents deployed by individual employees or teams outside IT governance, without registration, identity management, or oversight & Security blind spots, data leakage risk, compliance violations, unauditable decisions \\
+\addlinespace
+SP-03 & Orphaned Agents & Agents whose original creators have left the organization or whose business purpose has expired, but which continue operating & Ongoing compute costs for zero value, stale model behavior, security surface expansion \\
+\addlinespace
+SP-04 & Permission Creep & Agents that accumulate access permissions over time beyond their original scope, via delegation chains or manual overrides & Excessive data access, privilege escalation risk, blast radius amplification, regulatory non-compliance \\
+\addlinespace
+SP-05 & Unmonitored Delegation & Multi-agent delegation chains where Agent~A delegates to Agent~B delegates to Agent~C without end-to-end visibility or authorization tracking & Loss of accountability, untraceable decision provenance, cascading failures \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Sprawl Cost Model}\label{sec:taxonomy-cost}
+
+We define the total business cost of agent sprawl as:
+\begin{equation}\label{eq:sprawl-cost}
+C_{\text{sprawl}} = C_{\text{redundancy}} + C_{\text{security}} + C_{\text{compliance}} + C_{\text{operational}} + C_{\text{opportunity}}
+\end{equation}
+
+\noindent where $C_{\text{redundancy}}$ captures duplicated compute and API costs from functionally identical agents; $C_{\text{security}}$ quantifies incident remediation costs attributable to ungoverned agents; $C_{\text{compliance}}$ represents regulatory penalties and audit remediation from unauditable agent actions; $C_{\text{operational}}$ includes maintenance overhead for orphaned and unmanaged agents; and $C_{\text{opportunity}}$ captures the value foregone due to agent conflicts and inconsistent outputs interfering with business processes.
+
+This cost model motivates the AAGMM by demonstrating that governance is not overhead but investment: each dollar spent on governance controls reduces sprawl costs, and there exists a governance maturity level at which net business value (business returns minus governance costs minus sprawl costs) is maximized.
+
+
+%% ============================================================
+%% 4. THE AAGMM FRAMEWORK
+%% ============================================================
+\section{The AAGMM Framework}\label{sec:framework}
+
+The Agentic AI Governance Maturity Model (AAGMM) defines five progressive capability levels assessed across 12 governance domains. The framework is grounded in NIST AI RMF 1.0 and ISO/IEC 42001, extending these standards to address the unique challenges of autonomous multi-agent enterprise environments.
+
+\subsection{Design Principles}\label{sec:framework-principles}
+
+The AAGMM is designed around four principles:
+
+\textbf{Progressive capability:} Each level builds on the previous, establishing prerequisites. An organization cannot skip levels without accumulating governance debt that undermines higher-level controls.
+
+\textbf{Business-outcome orientation:} Each level is defined not only by what governance controls exist but by what business outcomes they enable. This connects governance investment to measurable returns.
+
+\textbf{Domain completeness:} The 12 governance domains collectively cover the full agent lifecycle from deployment through retirement, including inter-agent interactions that create emergent governance challenges.
+
+\textbf{Standards alignment:} Every domain maps to specific NIST AI RMF functions and ISO/IEC 42001 clauses, enabling organizations to leverage existing compliance infrastructure.
+
+\subsection{Five Maturity Levels}\label{sec:framework-levels}
+
+Table~\ref{tab:maturity-levels} defines the five AAGMM maturity levels with their key characteristics, active controls, and expected business outcomes.
+
+\begin{table}[htbp]
+\caption{AAGMM Maturity Levels: Characteristics, Controls, and Expected Outcomes.}\label{tab:maturity-levels}
+\centering
+\small
+\begin{tabularx}{\textwidth}{c l X X X}
+\toprule
+\textbf{Level} & \textbf{Name} & \textbf{Key Characteristics} & \textbf{Active Controls} & \textbf{Expected Outcomes} \\
+\midrule
+L1 & Ad-hoc & No formal governance; agents deployed by individual teams without coordination & None & High sprawl risk; uncontrolled costs; security blind spots \\
+\addlinespace
+L2 & Reactive & Basic agent registry; incident-triggered governance; manual oversight & Registry, incident response & Reduced blind spots; reactive cost control; fragmented governance \\
+\addlinespace
+L3 & Defined & Formal policies; centralized catalog; standardized deployment; RBAC; HITL breakpoints & Registry, IAM, observability, policy enforcement, HITL, audit, risk classification & Sprawl containment begins; measurable compliance \\
+\addlinespace
+L4 & Managed & Quantitative metrics; automated enforcement; continuous observability; real-time risk scoring & All L3 + automated policy, sprawl detection, lifecycle automation & Proactive risk reduction; optimized portfolio \\
+\addlinespace
+L5 & Optimized & Self-improving loops; predictive sprawl detection; governance-as-code in CI/CD & All L4 + continuous improvement, predictive sprawl, governance-as-code & Maximum value; governance overhead minimized \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Twelve Governance Domains}\label{sec:framework-domains}
+
+Each maturity level is assessed across 12 governance domains (GD-01 through GD-12), covering the complete lifecycle and interaction patterns of enterprise AI agents. Table~\ref{tab:domains} presents the domain catalog with standards mappings.
+
+\begin{table}[htbp]
+\caption{AAGMM Governance Domain Catalog with Standards Mapping.}\label{tab:domains}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l l l X}
+\toprule
+\textbf{ID} & \textbf{Domain} & \textbf{NIST AI RMF} & \textbf{ISO 42001} & \textbf{Sprawl Pattern} \\
+\midrule
+GD-01 & Agent Lifecycle Mgmt. & GOV 1.1, 1.3 & 6.1, 8.1 & SP-03 \\
+GD-02 & Identity \& Access Ctrl. & GOV 1.5, MNG 2.3 & 9.2, 9.4 & SP-04 \\
+GD-03 & Observability & MEA 2.1, 2.6 & 9.1 & SP-02, SP-05 \\
+GD-04 & Policy Enforcement & GOV 1.2, MNG 4.1 & 5.2, 8.2 & All \\
+GD-05 & Data Governance & MAP 3.1, GOV 1.7 & A.8 & SP-04 \\
+GD-06 & Human Oversight & GOV 1.4, MNG 1.3 & 6.2 & SP-05 \\
+GD-07 & Sprawl Containment & GOV 6.1, MAP 1.5 & 8.1, 10.1 & SP-01, SP-02 \\
+GD-08 & Audit \& Compliance & MEA 2.8, MNG 4.2 & 9.2, 10.2 & All \\
+GD-09 & Inter-Agent Coord. & MAP 3.4, MNG 2.1 & 8.2 & SP-05 \\
+GD-10 & Risk Classification & MAP 1.1, 1.2 & 6.1.2 & SP-04 \\
+GD-11 & Incident Response & MNG 3.1, 4.1 & A.6.2.5 & All \\
+GD-12 & Continuous Improvement & MEA 3.1, GOV 6.2 & 10.1, 10.2 & All \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+We organize these 12 domains into four functional groups aligned with the NIST AI RMF's four functions:
+
+\textbf{Lifecycle and Identity (GD-01, GD-02).} These domains establish the foundational governance infrastructure. Agent Lifecycle Management (GD-01) ensures every agent is registered at deployment, versioned through updates, and formally retired when no longer needed---directly addressing the orphaned agent problem (SP-03). Identity and Access Control (GD-02) assigns agents unique service accounts with least-privilege permissions, scoped to their designated function, using standards such as OAuth 2.1 with encrypted token management. Together, these domains answer the question: \textit{Do we know what agents exist and what they are authorized to do?}
+
+\textbf{Runtime Governance (GD-03 through GD-06).} These domains govern agent behavior during execution. Observability (GD-03) provides real-time telemetry on agent actions, decision traces, token usage, and latency---essential for detecting shadow agents and monitoring delegation chains. Policy Enforcement (GD-04) implements guardrails through policy-as-code frameworks (e.g., Open Policy Agent with Rego rules) that constrain agent actions at runtime. Data Governance (GD-05) enforces data access boundaries, PII handling rules, consent enforcement, and data lineage tracking. Human Oversight (GD-06) defines explicit human-in-the-loop breakpoints for high-impact decisions, escalation paths, and override mechanisms. Together, these domains answer: \textit{Are agents behaving correctly and safely in real-time?}
+
+\textbf{Portfolio Governance (GD-07 through GD-10).} These domains manage the agent ecosystem as a whole. Sprawl Containment (GD-07) actively scans for functional duplication, discovers shadow agents, conducts periodic portfolio reviews, and enforces agent consolidation. Audit and Compliance (GD-08) maintains immutable audit trails, generates attestation reports, and maps agent activities to regulatory requirements (SOC-2, GDPR, EU AI Act). Inter-Agent Coordination (GD-09) governs delegation protocols, capability negotiation between agents, conflict resolution, and chain-of-custody tracking for multi-agent workflows. Risk Classification (GD-10) assigns tiered autonomy levels based on the potential impact of agent actions. Together, these domains answer: \textit{Is our agent portfolio optimized, compliant, and well-coordinated?}
+
+\textbf{Improvement and Resilience (GD-11, GD-12).} These domains ensure the governance system itself evolves. Incident Response (GD-11) provides agent quarantine capabilities, rollback mechanisms, forensic trace reconstruction, and root cause analysis. Continuous Improvement (GD-12) establishes governance KPIs, feedback loops from operational data, benchmark-driven evaluation, and model drift detection. Together, these domains answer: \textit{Can we recover from failures and continuously improve?}
+
+\subsection{Governance-to-ROI Mapping}\label{sec:framework-roi}
+
+A distinguishing contribution of the AAGMM is the formal mapping between governance maturity and business outcome dimensions. We define four outcome dimensions:
+
+\textbf{Cost Containment (CC):} Reduction in redundant compute, duplicate agent maintenance, and sprawl-induced waste. Measured by the Sprawl Index $\text{SI} = (\text{duplicate} + \text{shadow} + \text{orphaned}) / \text{total agents}$, and the Governance Cost Ratio $\text{GCR} = \text{governance overhead} / \text{total agent operating cost}$.
+
+\textbf{Risk Reduction (RR):} Decrease in security incidents, compliance violations, and unauthorized actions. Measured by Risk Incident Rate $\text{RIR} = \text{violations per 1{,}000 agent actions}$.
+
+\textbf{Operational Efficiency (OE):} Improvement in agent task completion, reliability, and throughput. Measured by Effective Task Completion Rate $\text{ETCR} = (\text{successful} + \text{compliant completions}) / \text{total tasks}$.
+
+\textbf{Decision Quality (DQ):} Safety and integrity of inter-agent delegation chains and autonomous decisions. Measured by Delegation Safety Rate $\text{DSR} = \text{safe delegations} / \text{total delegations}$.
+
+The composite Net Business Value (NBV) is computed as a weighted aggregate:
+\begin{equation}\label{eq:nbv}
+\text{NBV} = 0.30 \cdot \text{ETCR} + 0.20 \cdot (1 - \text{SI}) + 0.20 \cdot (1 - \text{RIR}/100) + 0.15 \cdot \text{DSR} + 0.15 \cdot (1 - \text{GCR})
+\end{equation}
+
+Weights were assigned based on enterprise priority surveys from Deloitte~\cite{deloitte2026state} and KPMG~\cite{kpmg2026q4pulse}, which consistently rank operational efficiency and risk reduction as the top two priorities, followed by decision quality and cost management.
+
+
+%% ============================================================
+%% 5. EXPERIMENTAL DESIGN
+%% ============================================================
+\section{Experimental Design}\label{sec:experimental}
+
+\subsection{Simulation Framework}\label{sec:exp-simulation}
+
+To validate the AAGMM, we designed a multi-agent enterprise simulation that models agent deployment, task execution, inter-agent delegation, and governance control application across five maturity levels. The simulation is implemented in Python and uses deterministic seeding ($\text{seed} = 42$) for full reproducibility. The complete codebase is available at \url{https://github.com/curiosityexplorer/agentic-governance-maturity} under an Apache 2.0 license.
+
+The simulation models an enterprise with agents distributed across five business functions: customer service, finance, human resources, IT operations, and supply chain. Each function has six specialized agent capabilities (30 unique capability types total). Agents are deployed, assigned tasks of varying difficulty (40\% simple, 35\% moderate, 20\% complex, 5\% critical), and subjected to governance controls corresponding to their maturity level configuration.
+
+\subsection{Governance Level Configurations}\label{sec:exp-configs}
+
+Each governance level activates a specific set of controls as defined in the AAGMM framework (Section~\ref{sec:framework-levels}). Level~1 (Ad-hoc) has no controls active. Level~2 (Reactive) activates agent registry and incident response. Level~3 (Defined) adds identity management, scoped access control, observability, policy enforcement, HITL breakpoints, audit trails, and risk classification. Level~4 (Managed) adds automated policy enforcement, sprawl detection, and lifecycle automation. Level~5 (Optimized) adds continuous improvement, predictive sprawl detection, and governance-as-code.
+
+Shadow agents are generated probabilistically based on governance level, with shadow probability decreasing from 0.35 (L1) to 0.02 (L5). Orphan rates similarly decrease from 0.15 (L1) to 0.01 (L5). Governance controls affect task success probabilities, violation rates, and delegation chain safety through modeled effect sizes derived from industry benchmarks.
+
+\subsection{Experimental Scenarios}\label{sec:exp-scenarios}
+
+Five scenarios test the AAGMM under realistic enterprise conditions, as presented in Table~\ref{tab:scenarios}.
+
+\begin{table}[htbp]
+\caption{Experimental Scenarios.}\label{tab:scenarios}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X c c X}
+\toprule
+\textbf{Scenario} & \textbf{Description} & \textbf{Agents} & \textbf{Tasks} & \textbf{Primary Stress} \\
+\midrule
+S1: Greenfield & New deployment across 5 business units & 30 & 1{,}000 & Initial sprawl formation \\
+S2: Scaling & Expansion to larger agent fleet & 50 & 2{,}000 & Governance scalability \\
+S3: Cross-Func. & Multi-department collaboration workflows & 35 & 1{,}500 & Delegation chains \\
+S4: Adversarial & Unauthorized actions, prompt injection & 30 & 1{,}000 & Security governance \\
+S5: Optimization & Active tuning and retirement cycles & 40 & 1{,}500 & Portfolio management \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Statistical Methodology}\label{sec:exp-stats}
+
+Each scenario--level combination was run 30 times with different random seeds (deterministically generated from the base seed), yielding 750 total simulation runs ($5 \text{ scenarios} \times 5 \text{ levels} \times 30 \text{ trials}$). We report means, standard deviations, and 95\% confidence intervals for all metrics. Pairwise comparisons between governance levels use Welch's $t$-test with Cohen's $d$ for effect size measurement. Significance thresholds follow standard conventions: $p < 0.05$ (*), $p < 0.01$ (**), and $p < 0.001$ (***).
+
+
+%% ============================================================
+%% 6. RESULTS
+%% ============================================================
+\section{Results and Analysis}\label{sec:results}
+
+\subsection{Cross-Level Summary}\label{sec:results-summary}
+
+Table~\ref{tab:crosslevel} presents the aggregated results across all five scenarios for each governance maturity level. Results represent means and 95\% confidence intervals from 150 observations per level ($5 \text{ scenarios} \times 30 \text{ trials}$).
+
+\begin{table}[htbp]
+\caption{Cross-Level Summary: Business Outcome Metrics by Governance Maturity Level ($n = 150$ per level).}\label{tab:crosslevel}
+\centering
+\small
+\begin{tabular}{l c c c c c c}
+\toprule
+\textbf{Level} & \textbf{Sprawl Idx.} & \textbf{Risk/1K} & \textbf{Eff.\ Compl.} & \textbf{Gov.\ Cost} & \textbf{Deleg.\ Safe} & \textbf{NBV} \\
+\midrule
+L1 Ad-hoc    & $0.514 \pm 0.020$ & $57.83 \pm 1.11$ & $0.701 \pm 0.003$ & $0.020$ & $0.601 \pm 0.007$ & $0.629 \pm 0.006$ \\
+L2 Reactive  & $0.377 \pm 0.017$ & $40.23 \pm 0.89$ & $0.730 \pm 0.003$ & $0.060$ & $0.599 \pm 0.007$ & $0.694 \pm 0.004$ \\
+L3 Defined   & $0.254 \pm 0.017$ & $12.84 \pm 0.51$ & $0.863 \pm 0.002$ & $0.120$ & $0.904 \pm 0.005$ & $0.850 \pm 0.004$ \\
+L4 Managed   & $0.063 \pm 0.005$ & $3.12 \pm 0.33$  & $0.891 \pm 0.002$ & $0.180$ & $0.932 \pm 0.004$ & $0.911 \pm 0.003$ \\
+L5 Optimized & $0.029 \pm 0.004$ & $2.10 \pm 0.24$  & $0.929 \pm 0.002$ & $0.160$ & $0.992 \pm 0.002$ & $0.943 \pm 0.002$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Key Findings}\label{sec:results-findings}
+
+\textbf{Finding 1: Governance maturity dramatically reduces agent sprawl.} The Sprawl Index decreased from 0.514 at Level~1 (Ad-hoc) to 0.029 at Level~5 (Optimized), a 94.3\% reduction. The largest single improvement occurred between Level~3 (Defined) and Level~4 (Managed), where the addition of automated sprawl detection reduced the index by 75.2\% (from 0.254 to 0.063). This finding validates that active sprawl detection---not merely policy documentation---is the critical governance capability for sprawl containment.
+
+\textbf{Finding 2: Risk incident rates follow a power-law decline with governance maturity.} Risk incidents per 1{,}000 agent actions dropped from 57.83 at Level~1 to 2.10 at Level~5, a 96.4\% reduction. The sharpest decline occurred between Level~2 (Reactive, 40.23) and Level~3 (Defined, 12.84)---a 68.1\% reduction. This coincides with the introduction of policy enforcement, scoped access control, and audit trails, suggesting these controls form the minimum viable governance package for meaningful risk reduction.
+
+\textbf{Finding 3: Effective task completion improves monotonically with governance maturity.} The Effective Task Completion Rate increased from 0.701 at Level~1 to 0.929 at Level~5, a 32.6\% improvement. Notably, the governance cost ratio at Level~5 (0.160) is actually lower than at Level~4 (0.180), demonstrating that the automation and continuous improvement capabilities at Level~5 reduce governance overhead while simultaneously improving outcomes.
+
+\textbf{Finding 4: Delegation chain safety exhibits a step-function improvement at Level~3.} Delegation Safety Rate jumped from approximately 0.60 at Levels~1--2 to 0.904 at Level~3, then continued improving to 0.992 at Level~5. The dramatic improvement at Level~3 corresponds to the introduction of inter-agent coordination protocols and observability, which together provide the visibility needed to ensure delegation chains maintain authorization integrity.
+
+\textbf{Finding 5: The governance cost ratio peaks at Level~4 and decreases at Level~5, suggesting an automation dividend.} This pattern---increasing governance cost through Level~4 (0.180) followed by a decrease at Level~5 (0.160)---is a key practical finding. It demonstrates that investment in governance-as-code and continuous improvement automation at Level~5 not only improves outcomes but also reduces the operational cost of governance itself. This creates a compelling business case for organizations to push beyond Level~4.
+
+\subsection{Statistical Significance}\label{sec:results-stats}
+
+All pairwise comparisons between governance levels showed statistically significant differences in Net Business Value at $p < 0.001$. Table~\ref{tab:pairwise} presents the complete pairwise analysis.
+
+\begin{table}[htbp]
+\caption{Pairwise Statistical Comparisons: Net Business Value.}\label{tab:pairwise}
+\centering
+\small
+\begin{tabular}{l c c c c l}
+\toprule
+\textbf{Comparison} & $\boldsymbol{\Delta}$ \textbf{NBV} & \textbf{$t$-statistic} & \textbf{$p$-value} & \textbf{Cohen's $d$} & \textbf{Significance} \\
+\midrule
+L1 vs.\ L2 & $+0.065$ & 17.90  & $< 0.001$ & 2.07  & *** (Large) \\
+L1 vs.\ L3 & $+0.221$ & 60.99  & $< 0.001$ & 7.04  & *** (Very Large) \\
+L1 vs.\ L4 & $+0.282$ & 92.04  & $< 0.001$ & 10.63 & *** (Very Large) \\
+L1 vs.\ L5 & $+0.314$ & 103.54 & $< 0.001$ & 11.96 & *** (Very Large) \\
+L2 vs.\ L3 & $+0.156$ & 50.74  & $< 0.001$ & 5.86  & *** (Very Large) \\
+L3 vs.\ L4 & $+0.061$ & 25.78  & $< 0.001$ & 2.98  & *** (Large) \\
+L3 vs.\ L5 & $+0.093$ & 39.99  & $< 0.001$ & 4.62  & *** (Very Large) \\
+L4 vs.\ L5 & $+0.032$ & 24.52  & $< 0.001$ & 2.83  & *** (Large) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Effect sizes range from $d = 2.07$ (L1 vs.\ L2, large) to $d = 11.96$ (L1 vs.\ L5, very large), confirming that governance maturity differences translate into substantively meaningful---not merely statistically detectable---differences in business outcomes. Even the smallest pairwise comparison (L4 vs.\ L5, $d = 2.83$) exceeds conventional thresholds for large effects ($d > 0.8$).
+
+\subsection{Scenario-Specific Analysis}\label{sec:results-scenario}
+
+To examine whether governance maturity effects are consistent across enterprise contexts, we analyze results by scenario. Table~\ref{tab:scenario-nbv} presents the Net Business Value for each scenario--level combination.
+
+\begin{table}[htbp]
+\caption{Net Business Value by Scenario and Governance Level (mean, $n = 30$ per cell).}\label{tab:scenario-nbv}
+\centering
+\small
+\begin{tabular}{l c c c c c}
+\toprule
+\textbf{Scenario} & \textbf{L1} & \textbf{L2} & \textbf{L3} & \textbf{L4} & \textbf{L5} \\
+\midrule
+S1: Greenfield     & 0.657 & 0.735 & 0.862 & 0.912 & 0.945 \\
+S2: Scaling        & 0.577 & 0.656 & 0.806 & 0.901 & 0.921 \\
+S3: Cross-Func.    & 0.630 & 0.690 & 0.852 & 0.921 & 0.952 \\
+S4: Adversarial    & 0.672 & 0.685 & 0.863 & 0.912 & 0.950 \\
+S5: Optimization   & 0.638 & 0.673 & 0.845 & 0.907 & 0.939 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Several scenario-specific patterns emerge. The \textbf{Scaling scenario (S2)} exhibited the lowest NBV at Level~1 (0.577) and the highest Sprawl Index (0.746), reflecting the compounding effect of agent proliferation without governance controls. As agent count increases from 30 to 50, every sprawl pattern scales super-linearly in the absence of governance. However, governance maturity effectively tames this scaling challenge: by Level~4, the Scaling scenario achieves an NBV of 0.901, nearly matching the Greenfield scenario's Level~4 result of 0.912.
+
+The \textbf{Cross-Functional scenario (S3)} showed the highest risk incident rate at Level~1 (65.3 per 1{,}000 actions), underscoring that cross-departmental agent interactions amplify governance risks. Level~3 governance reduced this to 11.3, and Level~5 achieved 1.3---demonstrating that the inter-agent coordination domain (GD-09) is essential for cross-functional deployments.
+
+The \textbf{Adversarial scenario (S4)} revealed a critical finding: Level~2 (Reactive) governance provided minimal security benefit over Level~1, with risk incident rates of 51.0 vs.\ 55.0---a mere 7.3\% improvement. The NBV at Level~2 (0.685) was nearly identical to Level~1 (0.672). This demonstrates that an agent registry and incident response alone---without proactive policy enforcement, access controls, and observability---cannot meaningfully address security threats. However, Level~3 governance reduced adversarial risk incidents by 76.5\%, confirming that policy enforcement and scoped access control form the minimum viable security governance package.
+
+The \textbf{Optimization scenario (S5)} provided the clearest evidence of the Level~5 automation dividend. The L4-to-L5 NBV difference (0.907 to 0.939) was the widest among all scenarios, driven by the continuous improvement and predictive sprawl capabilities that actively retire underperforming agents and consolidate the portfolio.
+
+
+%% ============================================================
+%% 7. DISCUSSION
+%% ============================================================
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Practical Implications}\label{sec:disc-practical}
+
+The AAGMM results yield several actionable implications for enterprise practitioners:
+
+\textbf{Level~3 is the minimum viable governance standard.} The transition from Level~2 to Level~3 produces the single largest improvement in net business value ($+0.156$, $d = 5.86$). Organizations currently at Level~1 or~2 should prioritize reaching Level~3, which requires implementing identity management, scoped access control, observability, policy enforcement, HITL breakpoints, audit trails, and risk classification. While this represents significant investment, the 68.1\% reduction in risk incidents and 18.2\% improvement in task completion provide a clear business case.
+
+\textbf{Automated sprawl detection is the highest-leverage individual control.} The 75.2\% reduction in Sprawl Index between Level~3 and Level~4 is primarily attributable to automated sprawl detection (GD-07 at the Managed level). Organizations can partially capture this benefit by implementing agent deduplication scanning and shadow agent discovery even before achieving full Level~4 maturity.
+
+\textbf{Level~5 delivers an automation dividend.} The decrease in governance cost ratio from 0.180 (Level~4) to 0.160 (Level~5) while simultaneously improving all outcome metrics demonstrates that governance-as-code and continuous improvement capabilities pay for themselves. This finding is particularly relevant for CFOs evaluating the incremental cost of governance investment.
+
+\textbf{Reactive governance is inadequate for security.} The adversarial scenario results show that incident-triggered governance without proactive controls provides only marginal security improvement (7.3\%). Organizations facing security-sensitive use cases should target Level~3 as a minimum.
+
+\subsection{Comparison with Existing Maturity Models}\label{sec:disc-comparison}
+
+The AAGMM builds upon but fundamentally differs from established maturity models. CMMI's five-level structure~\cite{cmmi2018} informed the AAGMM's progressive design, but CMMI addresses software development process maturity---it has no provisions for autonomous agents, inter-agent delegation governance, or sprawl containment. COBIT's IT governance framework~\cite{cobit2019} provides enterprise-level oversight but operates at a strategic abstraction level that does not address the tactical, real-time governance controls needed for autonomous agents making hundreds of decisions per hour.
+
+Gartner's and Microsoft's AI maturity models~\cite{gartner2024aimaturity,microsoft2024aimaturity} address organizational AI readiness but are oriented toward AI adoption and capability building rather than governance of autonomous multi-agent systems. They do not define governance domains specific to agentic AI, such as sprawl containment, inter-agent coordination, or delegation chain integrity.
+
+Among academic proposals, the Enterprise Agentic Mesh~\cite{gupta2025eam} is closest in spirit but addresses network-level semantic routing rather than business-outcome-oriented governance maturity. The GaaS framework~\cite{fernandez2025gaas} focuses on output-level compliance filtering, operating at the individual agent interaction level rather than the enterprise portfolio level. The AAGMM is, to our knowledge, the first framework that defines progressive maturity levels with explicit governance domain catalogs, maps these to both regulatory standards and business outcome metrics, and provides empirical validation of the maturity--value relationship.
+
+\subsection{Alignment with Industry Findings}\label{sec:disc-alignment}
+
+Our findings are consistent with and extend industry observations. Deloitte's finding that enterprises where senior leadership actively shapes AI governance achieve significantly greater business value~\cite{deloitte2026state} aligns with our observation that governance maturity monotonically increases Net Business Value. KPMG's report that 65\% of leaders cite agentic system complexity as the top deployment barrier~\cite{kpmg2026q4pulse} is contextualized by our framework: complexity manifests specifically through the five sprawl patterns we categorize, and the AAGMM provides a structured approach to managing it. McKinsey's identification of agent sprawl as a risk analogous to early RPA proliferation~\cite{mckinsey2025seizing} is empirically validated by our simulation, which shows that ungoverned scaling (Scenario~S2 at Level~1) produces a Sprawl Index of 0.746---meaning nearly three-quarters of deployed agents are redundant, shadowed, or orphaned.
+
+\subsection{Limitations and Threats to Validity}\label{sec:disc-limitations}
+
+Several limitations should be acknowledged. First, the experimental validation uses simulated multi-agent environments rather than production enterprise deployments. While simulation allows controlled comparison across governance levels, it necessarily simplifies the complexity of real enterprise environments, including organizational politics, legacy system integration challenges, and vendor-specific agent platform constraints.
+
+Second, the task difficulty distribution and violation probability models are parameterized based on industry reports and reasonable assumptions rather than empirical measurement from specific enterprises. Different industries (financial services vs.\ retail vs.\ healthcare) may exhibit different distributions.
+
+Third, the governance cost ratio is modeled as a fixed function of level rather than dynamically computed from actual implementation costs, which vary significantly by organization size, existing IT maturity, and regulatory environment.
+
+Fourth, the composite NBV weights (0.30, 0.20, 0.20, 0.15, 0.15) represent a particular prioritization that may not match all organizations. A sensitivity analysis varying these weights is an important direction for future work.
+
+Finally, our simulation models agents with discrete capability types and binary governance controls. Real enterprise environments involve continuous capability spectrums, partial control implementations, and emergent interactions that are difficult to model discretely.
+
+\subsection{Ethical Considerations}\label{sec:disc-ethics}
+
+The AAGMM framework embeds ethical governance through several mechanisms. The Human Oversight domain (GD-06) ensures that human-in-the-loop breakpoints are structurally required at Level~3 and above, preventing fully autonomous operation without oversight mechanisms. The Risk Classification domain (GD-10) requires agents to be categorized by the potential impact of their actions, with higher-risk agents subjected to more stringent governance---consistent with the risk-based approach mandated by the EU AI Act~\cite{euaiact2024}. The Audit and Compliance domain (GD-08) ensures decision traceability, addressing the accountability challenges that arise when AI agents make consequential business decisions.
+
+
+%% ============================================================
+%% 8. CONCLUSION
+%% ============================================================
+\section{Conclusions and Future Work}\label{sec:conclusion}
+
+This paper introduced the Agentic AI Governance Maturity Model (AAGMM), a five-level framework spanning 12 governance domains for managing AI agent sprawl in enterprise business operations. The model is grounded in NIST AI RMF 1.0 and ISO/IEC 42001, and was validated through 750 simulation runs across five enterprise scenarios.
+
+Our key findings demonstrate that governance maturity produces statistically significant improvements across all measured business outcomes. The Sprawl Index decreased by 94.3\% from Level~1 to Level~5; risk incidents decreased by 96.4\%; effective task completion improved by 32.6\%; and delegation chain safety improved from 60.1\% to 99.2\%. All pairwise comparisons between governance levels were significant at $p < 0.001$ with large effect sizes ($d > 2.0$).
+
+The agent sprawl taxonomy (SP-01 through SP-05) provides enterprises with a diagnostic vocabulary for identifying and remediating specific sprawl patterns. The governance-to-ROI mapping enables organizations to build business cases for governance investment by connecting specific controls to measurable outcomes.
+
+Three findings carry particular practical significance: (1)~Level~3 (Defined) represents the minimum viable governance standard, producing the largest marginal improvement in business value; (2)~automated sprawl detection is the single highest-leverage governance control, reducing sprawl by 75.2\% when introduced at Level~4; and (3)~Level~5 governance delivers an automation dividend, reducing governance costs while simultaneously improving all business outcomes.
+
+Future work will extend this research in several directions. First, we plan case study validation with partner enterprises to test AAGMM predictions against real-world deployment data. Second, a self-assessment instrument will be developed to enable organizations to diagnose their current governance maturity level. Third, we will investigate the interaction between governance maturity and specific agent platforms (LangChain, AutoGen, CrewAI) to produce platform-specific implementation guidance. Fourth, dynamic governance cost modeling based on organizational parameters will replace the current fixed cost ratios. Fifth, integration with emerging Model Context Protocol (MCP) standards for tool-use governance represents a natural extension of the inter-agent coordination domain.
+
+As agentic AI becomes the backbone of enterprise operations, governance is not overhead---it is the infrastructure that determines whether agent ecosystems generate compounding business value or compounding business risk. The AAGMM provides a structured, evidence-based path to the former.
+
+
+%% ============================================================
+%% AUTHOR CONTRIBUTIONS, FUNDING, ETC.
+%% ============================================================
+\vspace{6pt}
+
+\authorcontributions{Conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing---original draft, writing---review and editing, visualization: V.A.}
+
+\funding{This research received no external funding.}
+
+\institutionalreview{Not applicable. This study does not involve human subjects or animal research.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{The experimental code, raw results, and aggregated data supporting the findings of this study are openly available at \url{https://github.com/curiosityexplorer/agentic-governance-maturity} under an Apache 2.0 license. All experiments use seed~$= 42$ for full reproducibility.}
+
+\conflictsofinterest{The author declares no conflicts of interest.}
+
+
+%% ============================================================
+%% REFERENCES
+%% ============================================================
+\begin{adjustwidth}{-\extralength}{0cm}
+\reftitle{References}
+
+\begin{thebibliography}{30}
+
+\bibitem{wang2024survey}
+Wang, L.; Ma, C.; Feng, X.; Zhang, Z.; Yang, H.; Zhang, J.; Chen, Z.; Tang, J.; Chen, X.; Lin, Y.; et~al.
+A Survey on Large Language Model based Autonomous Agents.
+\textit{Front. Comput. Sci.} \textbf{2024}, \textit{18}, 186345.
+
+\bibitem{acharya2025agentic}
+Acharya, D.B.; Kuppan, K.; Divya, B.
+Agentic AI: Autonomous Intelligence for Complex Goals---A Comprehensive Survey.
+\textit{IEEE Access} \textbf{2025}, \textit{13}, 1--25.
+
+\bibitem{deloitte2026state}
+Deloitte.
+State of AI in the Enterprise 2026.
+\textit{Deloitte Insights}, 2026.
+Available online: \url{https://www.deloitte.com/global/en/issues/generative-ai/state-of-ai-in-enterprise.html} (accessed on 9 March 2026).
+
+\bibitem{wef2026agentic}
+World Economic Forum.
+How Agentic, Physical and Sovereign AI Are Rewriting the Rules of Enterprise Innovation.
+\textit{WEF Stories}, January 2026.
+Available online: \url{https://www.weforum.org/stories/2026/01/} (accessed on 9 March 2026).
+
+\bibitem{googlecloud2025roi}
+Google Cloud.
+The ROI of AI: Agents Are Delivering for Business Now.
+\textit{Google Cloud Blog}, September 2025.
+Available online: \url{https://cloud.google.com/transform/roi-of-ai-how-agents-help-business} (accessed on 9 March 2026).
+
+\bibitem{deloitte2025emerging}
+Deloitte.
+Agentic AI Strategy: 2025 Emerging Technology Trends.
+\textit{Deloitte Insights}, 2025.
+Available online: \url{https://www.deloitte.com/us/en/insights/topics/technology-management/tech-trends/2026/agentic-ai-strategy.html} (accessed on 9 March 2026).
+
+\bibitem{kpmg2026q4pulse}
+KPMG.
+AI at Scale: How 2025 Set the Stage for Agent-Driven Enterprise Reinvention in 2026.
+\textit{KPMG Q4 AI Pulse Survey}, January 2026.
+Available online: \url{https://kpmg.com/us/en/media/news/q4-ai-pulse.html} (accessed on 9 March 2026).
+
+\bibitem{googlecloud2026blueprint}
+Google Cloud Consulting.
+A Blueprint for Enterprise-Wide Agentic AI Transformation.
+\textit{Harvard Business Review (Sponsored Content)}, February 2026.
+Available online: \url{https://hbr.org/sponsored/2026/02/a-blueprint-for-enterprise-wide-agentic-ai-transformation} (accessed on 9 March 2026).
+
+\bibitem{mckinsey2025seizing}
+McKinsey \& Company.
+Seizing the Agentic AI Advantage.
+\textit{McKinsey Digital}, June 2025.
+Available online: \url{https://www.mckinsey.com/capabilities/quantumblack/our-insights/seizing-the-agentic-ai-advantage} (accessed on 9 March 2026).
+
+\bibitem{googlecloud2026blueprint2}
+Google Cloud Consulting.
+A Blueprint for Enterprise-Wide Agentic AI Transformation.
+\textit{HBR}, 2026.
+
+\bibitem{arcade2025trends}
+Arcade.dev.
+Agentic AI Adoption Trends \& Enterprise ROI Statistics for 2025.
+\textit{Arcade Blog}, December 2025.
+Available online: \url{https://blog.arcade.dev/agentic-framework-adoption-trends} (accessed on 9 March 2026).
+
+\bibitem{aigl2025roi}
+AIGL.
+The ROI of AI 2025 (Review).
+\textit{AIGL Blog}, September 2025.
+Available online: \url{https://www.aigl.blog/the-roi-of-ai-2025/} (accessed on 9 March 2026).
+
+\bibitem{moveworks2025roi}
+Moveworks.
+Unlocking Agentic AI ROI for the Modern Enterprise.
+\textit{Moveworks Blog}, September 2025.
+Available online: \url{https://www.moveworks.com/us/en/resources/blog/how-to-measure-and-communicate-agentic-ai-roi} (accessed on 9 March 2026).
+
+\bibitem{gupta2025eam}
+Gupta, S.; Patel, R.; Nair, K.
+The Enterprise Agentic Mesh: Architectural Convergence of Semantic Networking and AI Governance.
+\textit{Int. J. Sci. Res. Publ.} \textbf{2025}, \textit{15}, 1--18.
+
+\bibitem{fernandez2025gaas}
+Fernandez, M.; Kim, J.; Rodriguez, A.
+Governance-as-a-Service: A Multi-Agent Framework for AI System Compliance and Policy Enforcement.
+\textit{arXiv} \textbf{2025}, arXiv:2508.18765.
+
+\bibitem{ray2025trism}
+Ray, P.P.
+TRiSM for Agentic AI: A Review of Trust, Risk, and Security Management in LLM-based Agentic Multi-Agent Systems.
+\textit{arXiv} \textbf{2025}, arXiv:2506.04133.
+
+\bibitem{crick2025agents}
+Crick, T.; De', R.; et~al.
+AI Agents and Agentic Systems: A Multi-Expert Analysis.
+\textit{J. Comput. Inf. Syst.} \textbf{2025}, \textit{65}, 1--25.
+
+\bibitem{nist2023rmf}
+National Institute of Standards and Technology.
+\textit{Artificial Intelligence Risk Management Framework (AI RMF 1.0)}.
+NIST AI 100-1, January 2023.
+Available online: \url{https://www.nist.gov/artificial-intelligence/ai-risk-management-framework} (accessed on 9 March 2026).
+
+\bibitem{iso42001}
+ISO/IEC 42001:2023; \textit{Information Technology---Artificial Intelligence---Management System}.
+International Organization for Standardization: Geneva, Switzerland, 2023.
+
+\bibitem{mitsloan2025emerging}
+Ransbotham, S.; Kiron, D.; Khodabandeh, S.; Iyer, S.; Das, A.
+The Emerging Agentic Enterprise: How Leaders Must Navigate a New Age of AI.
+\textit{MIT Sloan Manag. Rev.} \textbf{2025}, November, 1--32.
+
+\bibitem{nist2024genai}
+National Institute of Standards and Technology.
+\textit{Generative AI Profile (NIST AI 600-1)}.
+NIST, July 2024.
+
+\bibitem{euaiact2024}
+European Parliament and Council.
+Regulation (EU) 2024/1689 Laying Down Harmonised Rules on Artificial Intelligence (AI Act).
+\textit{Off. J. Eur. Union} \textbf{2024}, L 2024/1689.
+
+\bibitem{cmmi2018}
+CMMI Institute.
+\textit{CMMI Model V2.0}.
+ISACA, 2018.
+
+\bibitem{cobit2019}
+ISACA.
+\textit{COBIT 2019 Framework: Introduction and Methodology}.
+ISACA, 2019.
+
+\bibitem{gartner2024aimaturity}
+Gartner.
+AI Maturity Model.
+\textit{Gartner Research}, 2024.
+
+\bibitem{microsoft2024aimaturity}
+Microsoft.
+AI Maturity Framework.
+\textit{Microsoft AI Business School}, 2024.
+
+\bibitem{chen2025manageragent}
+Chen, Y.; Liu, R.; et~al.
+Orchestrating Human-AI Teams: The Manager Agent as a Unifying Research Challenge.
+In \textit{Proceedings of the 2025 7th International Conference on Distributed Artificial Intelligence (DAI 2025)};
+ACM: New York, NY, USA, 2025.
+
+\bibitem{ranjan2025loka}
+Ranjan, R.; Gupta, S.; Singh, S.N.
+LOKA Protocol: A Decentralized Framework for Trustworthy and Ethical AI Agent Ecosystems.
+\textit{arXiv} \textbf{2025}, arXiv:2504.10915.
+
+\bibitem{openai2025practices}
+OpenAI.
+Practices for Governing Agentic AI Systems.
+OpenAI, 2025.
+Available online: \url{https://cdn.openai.com/papers/practices-for-governing-agentic-ai-systems.pdf} (accessed on 9 March 2026).
+
+\end{thebibliography}
+\end{adjustwidth}
+
+\end{document}

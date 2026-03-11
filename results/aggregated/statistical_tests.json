@@ -1,0 +1,112 @@
+{
+  "L1_vs_L2": {
+    "mean_L1": 0.6247,
+    "mean_L2": 0.6936,
+    "difference": 0.0688,
+    "t_statistic": 19.8727,
+    "df": 283.8,
+    "p_value": 0.0,
+    "cohens_d": 2.2947,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L1_vs_L3": {
+    "mean_L1": 0.6247,
+    "mean_L3": 0.8485,
+    "difference": 0.2238,
+    "t_statistic": 64.923,
+    "df": 282.3,
+    "p_value": 0.0,
+    "cohens_d": 7.4967,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L1_vs_L4": {
+    "mean_L1": 0.6247,
+    "mean_L4": 0.9103,
+    "difference": 0.2855,
+    "t_statistic": 100.1266,
+    "df": 180.7,
+    "p_value": 0.0,
+    "cohens_d": 11.5616,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L1_vs_L5": {
+    "mean_L1": 0.6247,
+    "mean_L5": 0.944,
+    "difference": 0.3193,
+    "t_statistic": 112.3503,
+    "df": 178.4,
+    "p_value": 0.0,
+    "cohens_d": 12.9731,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L2_vs_L3": {
+    "mean_L2": 0.6936,
+    "mean_L3": 0.8485,
+    "difference": 0.1549,
+    "t_statistic": 51.1025,
+    "df": 298.0,
+    "p_value": 0.0,
+    "cohens_d": 5.9008,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L2_vs_L4": {
+    "mean_L2": 0.6936,
+    "mean_L4": 0.9103,
+    "difference": 0.2167,
+    "t_statistic": 92.8665,
+    "df": 198.2,
+    "p_value": 0.0,
+    "cohens_d": 10.7233,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L2_vs_L5": {
+    "mean_L2": 0.6936,
+    "mean_L5": 0.944,
+    "difference": 0.2504,
+    "t_statistic": 107.8903,
+    "df": 194.8,
+    "p_value": 0.0,
+    "cohens_d": 12.4581,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L3_vs_L4": {
+    "mean_L3": 0.8485,
+    "mean_L4": 0.9103,
+    "difference": 0.0618,
+    "t_statistic": 26.7532,
+    "df": 199.4,
+    "p_value": 0.0,
+    "cohens_d": 3.0892,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L3_vs_L5": {
+    "mean_L3": 0.8485,
+    "mean_L5": 0.944,
+    "difference": 0.0955,
+    "t_statistic": 41.5871,
+    "df": 195.9,
+    "p_value": 0.0,
+    "cohens_d": 4.8021,
+    "significant_p005": true,
+    "significant_p001": true
+  },
+  "L4_vs_L5": {
+    "mean_L4": 0.9103,
+    "mean_L5": 0.944,
+    "difference": 0.0337,
+    "t_statistic": 27.3283,
+    "df": 297.6,
+    "p_value": 0.0,
+    "cohens_d": 3.1556,
+    "significant_p005": true,
+    "significant_p001": true
+  }
+}

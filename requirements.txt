@@ -1,0 +1,4 @@
+# AAGMM - Agentic AI Governance Maturity Model
+# Core simulation has zero dependencies (Python 3.8+ stdlib only)
+# Optional dependencies for figures and analysis:
+matplotlib>=3.5.0

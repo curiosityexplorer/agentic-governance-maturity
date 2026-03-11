@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "AAGMM: Agentic AI Governance Maturity Model"
+version: 1.0.0
+date-released: 2026-03-10
+license: Apache-2.0
+repository-code: "https://github.com/curiosityexplorer/agentic-governance-maturity"
+authors:
+  - family-names: Acharya
+    given-names: Vivek
+    email: vacharya@bu.edu
+    orcid: "https://orcid.org/0009-0002-0860-9462"
+preferred-citation:
+  type: article
+  title: "Governing the Agentic Enterprise: A Governance Maturity Model for Managing AI Agent Sprawl in Business Operations"
+  authors:
+    - family-names: Acharya
+      given-names: Vivek
+      orcid: "https://orcid.org/0009-0002-0860-9462"
+  journal: "AI (MDPI)"
+  year: 2026
+  issn: "2673-2688"
+  url: "https://www.mdpi.com/journal/ai"
