@@ -210,7 +210,7 @@ If you use this work, please cite:
 ## Author
 
 **Vivek Acharya**
-Independent Researcher, Boston, MA, USA
+Independent Researcher, Dallas, TX, USA
 Email: vacharya@bu.edu
 ORCID: [0009-0002-0860-9462](https://orcid.org/0009-0002-0860-9462)
 
